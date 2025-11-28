@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUCKYBEAR — Быстрый вход</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preload" as="video" href="video/tutor.mp4" type="video/mp4">
+<link rel="preload" as="image" href="video/preview.jpg">
+<style>
+:root{
+--bg-1:#040408; --bg-2:#0a0c14;
+--accent-1:#d74a99; --accent-2:#44c2e0; --accent-3:#caa200;
+--text:#e7eefc; --muted:rgba(231,238,252,0.75);
+--tg-blue:#0088cc;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;width:100%;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+
+/* Фоновые анимации */
+.flux,.band1,.band2{position:fixed;pointer-events:none;z-index:0;}
+.flux{inset:-30%;background:conic-gradient(from 120deg at 50% 50%, rgba(127,255,212,0.12), rgba(255,90,160,0.1), rgba(200,150,255,0.12), rgba(255,220,120,0.08));filter:blur(85px);animation:flux-rotate 35s linear infinite, glow-bg 6s ease-in-out infinite alternate;}
+.band1{width:800px;height:400px;left:-200px;top:10%;background:radial-gradient(circle at 20% 30%, rgba(68,194,224,0.18),transparent);filter:blur(65px);opacity:0.14;animation:band-glow 6s ease-in-out infinite alternate;}
+.band2{width:700px;height:360px;right:-160px;bottom:8%;background:radial-gradient(circle at 80% 70%, rgba(215,74,153,0.16),transparent);filter:blur(65px);opacity:0.14;animation:band-glow 6s ease-in-out infinite alternate;}
+@keyframes flux-rotate{to{transform:rotate(360deg);}}
+@keyframes glow-bg{0%{filter:blur(75px);}50%{filter:blur(100px);}100%{filter:blur(75px);}}
+@keyframes band-glow{0%{opacity:0.1;}50%{opacity:0.22;}100%{opacity:0.1;}}
+
+.wrap{width:min(92vmin,980px);max-width:980px;min-height:100vh;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:26px;padding:24px;margin:0 auto;box-shadow:0 30px 90px rgba(0,0,0,0.65);position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow:visible;}
+.casino-logo-large{width:clamp(100px,14vw,180px);margin:40px 0 12px;display:flex;align-items:center;justify-content:center;border-radius:14px;overflow:hidden;}
+.casino-logo-large img{width:100%;height:auto;object-fit:contain;display:block;}
+.title-wrap{text-align:center;margin-bottom:6px;padding:0 8px;}
+.h1{font-family:'Orbitron','Audiowide',sans-serif;font-weight:700;font-size:clamp(18px,2.6vw,28px);background:linear-gradient(135deg,var(--accent-1),var(--accent-2),var(--accent-3));background-size:200% 200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 12px rgba(255,255,255,0.25);animation:title-glow 3s ease-in-out infinite alternate,title-gradient 6s ease-in-out infinite alternate;}
+@keyframes title-glow{0%{text-shadow:0 0 8px rgba(255,255,255,0.25);}50%{text-shadow:0 0 18px rgba(255,255,255,0.45);}100%{text-shadow:0 0 8px rgba(255,255,255,0.25);}}
+@keyframes title-gradient{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+.desc{color:var(--muted);font-size:clamp(12px,1.6vw,14px);max-width:760px;}
+.instr-banner{margin:14px auto;padding:10px 18px;border-radius:999px;background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));backdrop-filter:blur(6px);box-shadow:0 12px 40px rgba(0,0,0,0.45);z-index:5;position:relative;}
+.instr-badge{font-family:'Orbitron','Audiowide',Inter;font-weight:900;letter-spacing:2px;font-size:16px;padding:6px 10px;border-radius:999px;background:linear-gradient(120deg,var(--accent-3),var(--accent-2),var(--accent-1));background-size:200% 200%;-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;animation:badge-gradient 4s ease-in-out infinite alternate,badge-glow 2.5s ease-in-out infinite alternate;}
+@keyframes badge-gradient{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+@keyframes badge-glow{0%{text-shadow:0 0 6px rgba(255,255,255,0.2);}50%{text-shadow:0 0 14px rgba(255,255,255,0.35);}100%{text-shadow:0 0 6px rgba(255,255,255,0.2);}}
+.player{width:100%;max-width:920px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000;border:1px solid rgba(255,255,255,0.03);margin:18px 0;position:relative;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,0.45);}
+.player video{width:100%;height:100%;object-fit:cover;display:block;background:#000;}
+.video-poster-overlay{position:absolute;inset:0;background:#000 center/cover no-repeat;display:none;align-items:center;justify-content:center;cursor:pointer;}
+.play-icon{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.22);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,0.45);}
+.play-icon::before{content:"";width:0;height:0;border-left:22px solid #fff;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px;}
+.video-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;color:var(--muted);background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));font-size:14px;}
+
+.vpn-warning {
+  margin: 10px 0 16px;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  color: var(--accent-3);
+  font-size: 14px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.buttons{display:flex;flex-direction:column;gap:12px;width:100%;max-width:420px;margin-top:8px;}
+.cta{display:flex;align-items:center;justify-content:center;gap:12px;padding:14px;border-radius:12px;font-weight:900;font-size:17px;text-decoration:none;color:#07101a;cursor:pointer;position:relative;overflow:hidden;transition:box-shadow 0.3s ease,transform 0.3s ease;}
+.cta-primary{background:linear-gradient(90deg,var(--accent-2),var(--accent-1));box-shadow:0 20px 60px rgba(255,92,161,0.4),0 0 30px rgba(122,255,242,0.35);color:#07101a;}
+.cta-primary:hover{box-shadow:0 25px 70px rgba(255,92,161,0.5),0 0 40px rgba(122,255,242,0.4);transform:translateY(-3px) scale(1.04);}
+.cta-tg{background:var(--tg-blue);color:#fff;box-shadow:0 18px 50px rgba(0,136,204,0.25);display:flex;align-items:center;justify-content:center;gap:10px;transition:box-shadow 0.3s ease,transform 0.3s ease;}
+.cta-tg:hover{background:#0099e6;transform:translateY(-4px) scale(1.03);box-shadow:0 25px 70px rgba(0,136,204,0.3),0 0 25px rgba(0,136,204,0.55);}
+.cta-tg img{width:20px;height:20px;display:inline-block;vertical-align:middle;filter:none;}
+.cta:before{content:"";position:absolute;inset:0;border-radius:12px;background:linear-gradient(60deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02), rgba(255,255,255,0.06));transform:translateX(-100%);opacity:0.6;mix-blend-mode:overlay;transition:transform 420ms;}
+.cta:hover:before{transform:translateX(0%);}
+.ripple{position:absolute;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;background:rgba(255,255,255,0.12);animation:ripple 600ms ease-out;}
+@keyframes ripple{from{opacity:0.8;transform:translate(-50%,-50%) scale(0.2);}to{opacity:0;transform:translate(-50%,-50%) scale(2.5);}}
+.badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+.badge{font-size:12px;padding:6px 8px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:var(--muted);}
+.foot{margin-top:18px;font-size:12px;color:var(--muted);opacity:0.95;}
+</style>
+</head>
+<body>
+  <!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=105547249', 'ym');
+
+    ym(105547249, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/105547249" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<div class="flux"></div>
+<div class="band1"></div>
+<div class="band2"></div>
+<main class="wrap">
+  <div class="casino-logo-large"><img src="logobear.png" alt="LUCKYBEAR логотип"></div>
+  <div class="title-wrap">
+    <div class="h1">LUCKYBEAR — Войти и играть</div>
+    <div class="desc">Нажми «Играть в Telegram» — получи бонус на реальный баланс до 100.000₽!</div>
+  </div>
+  <div class="instr-banner"><div class="instr-badge">ИНСТРУКЦИЯ</div></div>
+  <section class="player">
+    <video id="promoVideo" poster="video/preview.jpg" muted playsinline preload="auto" controls>
+      <source src="video/tutor.mp4" type="video/mp4">
+      Ваш браузер не поддерживает видео.
+    </video>
+    <div id="videoPoster" class="video-poster-overlay" style="display:none"><div class="play-icon"></div></div>
+    <div id="videoFallback" class="video-fallback" style="display:none">Видео не найдено. Положите <code>video/tutor.mp4</code> в папку <code>/video</code>.</div>
+  </section>
+
+  <nav class="vpn-warning">
+    ⚠️ <b>Важно:</b> если сайт не открывается - включите VPN 
+  </nav>
+
+  <nav class="buttons">
+    <a id="tg2" class="cta cta-tg" href="https://t.me/+Sc08yY6CxndkZDAy" target="_blank" rel="noopener noreferrer">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG">
+      TG канал — акции и розыгрыши
+    </a>
+    <a id="tg1" class="cta cta-primary" href="https://t.me/Lucky_Bear_SpinPro_Bot/app?startapp=bXN0PTB4MThiOTAxM2M1Jm09TWF4aW03MzEmYz1sYW5kMg" target="_blank" rel="noopener noreferrer">Играть в Telegram</a>
+    <a id="mainCTA" class="cta cta-primary" href="https://lbgame777.xyz/6J3MeO" target="_blank" rel="noopener noreferrer">Играть на сайте</a>
+    
+  </nav>
+
+  <div class="badges">
+    <div class="badge">Быстрая регистрация</div>
+    <div class="badge">Бонусы до 100%</div>
+    <div class="badge">Поддержка 24/7</div>
+  </div>
+  <div class="foot">© LuckyBear — Все права защищены</div>
+</main>
+<script>
+window.__promoVideoPrefetch=(function(){var u='video/tutor.mp4';try{fetch(u).then(function(r){if(!r.ok)throw new Error();return r.blob();}).then(function(b){window.__promoVideoBlobURL=URL.createObjectURL(b);}).catch(function(){});}catch(e){}})();
+</script>
+<script>
+(function(){
+const buttons=document.querySelectorAll('.cta');
+buttons.forEach(btn=>{
+btn.addEventListener('click',function(e){
+const rect=btn.getBoundingClientRect();
+const ripple=document.createElement('span');
+ripple.className='ripple';
+const size=Math.max(rect.width,rect.height)*1.2;
+ripple.style.width=size+'px';
+ripple.style.height=size+'px';
+ripple.style.left=(e.clientX||rect.left+rect.width/2)-rect.left+'px';
+ripple.style.top=(e.clientY||rect.top+rect.height/2)-rect.top+'px';
+btn.appendChild(ripple);
+setTimeout(()=>ripple.remove(),600);
+});
+});
+})();
+ (function(){
+ var v=document.getElementById('promoVideo');
+ var overlay=document.getElementById('videoPoster');
+ var fallback=document.getElementById('videoFallback');
+ if(!v) return;
+ try{
+   var p=v.getAttribute('poster');
+   if(p){overlay.style.backgroundImage='url('+p+')';overlay.style.display='flex';}
+ }catch(e){}
+ function hideOverlay(){if(overlay) overlay.style.display='none';}
+ if(overlay){overlay.addEventListener('click',function(){try{v.play();hideOverlay();}catch(e){hideOverlay();}});}
+ v.addEventListener('play',hideOverlay);
+ v.addEventListener('error',function(){if(fallback) fallback.style.display='flex';hideOverlay();});
+ var blob=window.__promoVideoBlobURL;
+ if(blob){try{
+   v.removeAttribute('src');
+   var s=v.querySelector('source');
+   if(s) s.remove();
+   v.src=blob;
+   v.preload='auto';
+   v.load();
+ }catch(e){}}
+ })();
+</script>
+</body>
+</html>
